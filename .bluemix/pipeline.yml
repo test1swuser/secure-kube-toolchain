@@ -5,7 +5,7 @@ properties:
   value: ${API_KEY}
   type: secure
 stages:
-- name: BUILD-OWN
+- name: BUILD
   inputs:
   - type: git
     branch: master
@@ -17,14 +17,16 @@ stages:
     value: ${APP_NAME}
     type: text
   jobs:
-  - name: Fetch code
+  - name: Fetch code-customize
     type: builder
     artifact_dir: ''
     build_type: shell
     script: |+
       #!/bin/bash
       # set -x
-
+      
+      # Pipeline customeze by lpg
+      
       # Git repo cloned at $WORKING_DIR, copy into $ARCHIVE_DIR
       mkdir -p $ARCHIVE_DIR
       cp -R -n ./ $ARCHIVE_DIR/ || true
@@ -62,7 +64,7 @@ stages:
       else
         echo "Test runner script not found: ./test/run-tests.sh"
       fi
-- name: CONTAINERIZE-OWN
+- name: CONTAINERIZE
   properties:
   - name: buildprops
     value: build.properties
@@ -164,7 +166,7 @@ stages:
       # source: https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_vulnerabilities.sh
       # Check for vulnerabilities of built image using Vulnerability Advisor
       source <(curl -sSL "https://raw.githubusercontent.com/open-toolchain/commons/master/scripts/check_vulnerabilities.sh")
-- name: DEPLOY-OWN
+- name: DEPLOY
   inputs:
   - type: job
     stage: CONTAINERIZE
